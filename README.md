@@ -12,3 +12,8 @@ Before building, please build dependencies by running `python[3] -m pip install 
 
 # Resources
 [Test Bench](https://www.cloudlab.us/show-project.php?project=RuralAgriculture)
+
+# Example Start Command
+terminal 1: `$ python3 ./server.py --host localhost --port 6789`
+
+terminal 2: `$ python3 ./client.py --host localhost --port 6789`
