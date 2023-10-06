@@ -1,0 +1,3 @@
+python-openid2
+grpcio
+pymongo
