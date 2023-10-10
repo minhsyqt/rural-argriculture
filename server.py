@@ -9,6 +9,15 @@ import selectors
 HOST = "localhost"
 NUM_PORTS = 1000
 
+def handle_signup(connection, payload):
+    # Send reply back to client
+    connection.sendall(json.dumps("Signup sucessful!").encode("utf-8"))
+
+    # Hook to MongoDB here
+
+def handle_login(connection, payload):
+    pass
+
 def client_handler(connection, address):
     while True:
         try:
@@ -20,8 +29,11 @@ def client_handler(connection, address):
             # Acknowledge message received
             print("{}:{} wrote: {}".format(address[0], address[1], payload))
 
-            # Send reply back to client
-            connection.sendall(json.dumps("Signup sucessful!").encode("utf-8"))
+            if payload["request_type"] == "signup":
+                handle_signup(connection, payload)
+            elif payload["request_type"] == "login":
+                handle_login(connection, payload)
+                
         except Exception as e:
             print(str(e))
             break

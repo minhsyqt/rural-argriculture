@@ -25,7 +25,9 @@ class Farmer:
             HOST = "localhost"
             PORT = 1024 + self.farmerID
 
-            signup_data = {"username": self.username, "password": self.password}
+            signup_data = { "request_type": "signup",
+                            "username": self.username, 
+                            "password": self.password}
 
             # Create a socket (SOCK_STREAM means a TCP socket)
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
