@@ -5,15 +5,30 @@ import threading
 import argparse
 import json
 import selectors
+import pymongo
+from pymongo import MongoClient
 
+# Important Global Configurations
 HOST = "localhost"
+MONGODB_SERVER = 'mongodb://localhost:27017/'
 NUM_PORTS = 1000
+
+
+# Global Variables
+mongoclient = MongoClient(MONGODB_SERVER)
+DB = mongoclient['farmers_database']
+farmers_collection = DB['farmers_info']
 
 def handle_signup(connection, payload):
     # Send reply back to client
     connection.sendall(json.dumps("Signup sucessful!").encode("utf-8"))
 
-    # Hook to MongoDB here
+    # Insert new entry into MongoDB
+    collection_entry = {
+        "username": payload["username"],
+        "password": payload["password"],
+    }
+    farmers_collection.insert_one(collection_entry)
 
 def handle_login(connection, payload):
     pass
@@ -33,7 +48,7 @@ def client_handler(connection, address):
                 handle_signup(connection, payload)
             elif payload["request_type"] == "login":
                 handle_login(connection, payload)
-                
+
         except Exception as e:
             print(str(e))
             break
@@ -47,8 +62,12 @@ def accept_connections(ServerSocket):
         worker.start()
 
 if __name__ == '__main__':
-    start = time.time()
 
+    # Setup MongoDB
+
+
+    # Setup sockets
+    start = time.time()
     sel = selectors.DefaultSelector()
 
     for PORT in range(1024, 1024 + NUM_PORTS):
@@ -72,3 +91,4 @@ if __name__ == '__main__':
         print("Caught keyboard interrupt, exiting")
     finally:
         sel.close()
+        mongoclient.close()
