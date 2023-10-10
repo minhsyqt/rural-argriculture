@@ -4,7 +4,7 @@ import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--host", type=str, default=None, help="Host IP address")
-parser.add_argument("--port", type=int, default=9999, help="Port number")
+parser.add_argument("--port", type=int, default=1024, help="Port number")
 args = parser.parse_args()
 
 
