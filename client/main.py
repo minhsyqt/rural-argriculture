@@ -1,6 +1,6 @@
 from world import World
 if __name__ == '__main__':
-	num_farmers = 1000
+	num_farmers = 100
 	num_signup = 10
 	seed = 0
 	lat_start = 0
