@@ -17,3 +17,7 @@ Before building, please build dependencies by running `python[3] -m pip install 
 terminal 1: `$ python3 ./server.py --host localhost --port 6789`
 
 terminal 2: `$ python3 ./client.py --host localhost --port 6789`
+
+# Documentation
+
+[Milestone Paper](https://docs.google.com/document/d/1e6AjzVHlKFUWOpkIXDwbG4AG0jbpyfaMrozU4yS6uXg/edit)
