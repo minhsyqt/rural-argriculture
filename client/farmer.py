@@ -7,27 +7,28 @@ import jwt
 import random
 
 class Farmer:
-    def __init__(self, farmerID, geolocation):
-        self.farmerID = farmerID
-        self.geolocation = geolocation
+    def __init__(self, phone_number, farm_location):
+        self.farmerID = phone_number
+        self.farm_location = farm_location
         self.already_signup = False
 
         # Signup related
-        self.username = self.farmerID # keep it simple ... 
-        self.password = 1234 # not sure if we want to add false login for now
+        self.phone_number = phone_number # keep it simple ... 
 
     #================= Actions that farmers can do =================
 
     # The first action should always be sign up, onetime event
-    def signup(self):
+    def signup(self, signup_num):
         if not self.already_signup:
             # Setup conneciton to host
             HOST = "localhost"
-            PORT = 1024 + self.farmerID
+            PORT = 1024 + signup_num
 
             signup_data = { "request_type": "signup",
-                            "username": self.username, 
-                            "password": self.password}
+                            "phone_number": self.phone_number,
+                            "farm_location_lat": self.farm_location["lat"],
+                            "farm_location_long": self.farm_location["long"]
+                            }
 
             # Create a socket (SOCK_STREAM means a TCP socket)
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -44,6 +45,7 @@ class Farmer:
                     # Receive data from the server
                     received = json.loads(sock.recv(1024).decode("utf-8"))
                     print("Received: {}".format(received))
+                    sock.close()
                 except socket.error as e:
                     print(str(e))
                     print("Server is down")

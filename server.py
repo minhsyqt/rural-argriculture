@@ -6,13 +6,15 @@ import argparse
 import json
 import selectors
 import pymongo
+import googlemaps
 from pymongo import MongoClient
 
 # Important Global Configurations
 HOST = "localhost"
 MONGODB_SERVER = 'mongodb://localhost:27017/'
-NUM_PORTS = 1000
+NUM_PORTS = 256
 
+gmapsclient = googlemaps.Client(key='Ask Minh for API key')
 
 # Global Variables
 mongoclient = MongoClient(MONGODB_SERVER)
@@ -23,10 +25,15 @@ def handle_signup(connection, payload):
     # Send reply back to client
     connection.sendall(json.dumps("Signup sucessful!").encode("utf-8"))
 
+    latitude  = payload["farm_location_lat"]
+    longitude = payload["farm_location_long"]
+
+    address = gmapsclient.reverse_geocode((latitude, longitude))
+    print(address)
+
     # Insert new entry into MongoDB
     collection_entry = {
-        "username": payload["username"],
-        "password": payload["password"],
+        "phone_number": payload["phone_number"],
     }
     farmers_collection.insert_one(collection_entry)
 
