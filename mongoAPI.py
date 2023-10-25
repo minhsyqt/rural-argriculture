@@ -1,6 +1,19 @@
 from pymongo import MongoClient
 import json
 
+
+# validates user based on provided dictionary
+def validateUser(dict):
+    if dict['phone_number'] == None:
+        return "Invalid Phone Number."
+    elif (dict['firstname'] == None) and (dict['lastname'] == None):
+        return "No name given"
+    elif (dict['location']['location']['0'] == None) or (dict['location']['location']['1'] == None):
+        return "invalid coordinates."
+    else:
+        return True
+
+
 # globals 
 #? should these be in a config file, encrypted?
 HOST = "localhost"
@@ -21,18 +34,29 @@ def connect(_database, _collection):
 
 # disconnect -> garbage collection
 def disconnect():
+    global client
     client.close()
 
 def getUser(phoneNumber):
+    global collection
     data = collection.find_one({"phone_number": phoneNumber})
+    print(data['phone_number'])
+    # data is a dict
     if (data is not None):
-        return data 
+        return data
+    else:
+        return "User not found."
 
 # create user based on provided information
-def createUser():
-    # collection.insert_one()
+def createUser(user):
+    valid = validateUser(user)
+    if valid == True:
+        _setUser(user)
+    else:
+        return "User could not be created: " + valid
     return
 
-# check for parameter; change that one 
-def setUser():
-    return
+# private method; expects a valid user object
+def _setUser(user):
+    global collection
+    return collection.insert_one(user)
