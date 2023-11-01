@@ -2,15 +2,20 @@ import mongoAPI
 import requests
 
 # https://api.weather.gov/points/{latitude},{longitude}
-BaseURL = "https://api.weather.gov/points/"
-Headers = {"Content-Type":"application/json"}
+BaseURL = "http://api.weatherapi.com/v1/current.json"
+Headers = {
+    "Content-Type":"application/json",
+    "User-Agent": "Rural-Agriculture"
+    }
+API_KEY = "a661df6f200547508bb181510230111"
+URL = BaseURL + "?key=" + API_KEY
 
 # weather calls
 def _fetchWeather(user):
-    url = BaseURL + str(user['location']['latitude']) + "," + str(user['location']['longitude'])
-    weather = requests.get(url, headers=Headers) 
-    #TODO : add correct headers; break apart weather
-    return
+    url = URL + "&q=" + str(user['location']['latitude']) + "," + str(user['location']['longitude']) + "&aqi=yes"
+    weather = requests.get(url, headers=Headers).text
+    #TODO : break apart weather
+    return weather
 
 # alerts calls
 def _fetchAlert(user):
