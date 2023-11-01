@@ -3,3 +3,4 @@ grpcio
 pymongo
 googlemaps
 selectors
+requests

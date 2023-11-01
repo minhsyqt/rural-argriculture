@@ -8,7 +8,7 @@ def validateUser(dict):
         return "Invalid Phone Number."
     elif (dict['firstname'] == None) and (dict['lastname'] == None):
         return "No name given"
-    elif (dict['location']['location']['0'] == None) or (dict['location']['location']['1'] == None):
+    elif (dict['location']['longitude'] == None) or (dict['location']['latitude'] == None):
         return "invalid coordinates."
     else:
         return True
@@ -40,7 +40,6 @@ def disconnect():
 def getUser(phoneNumber):
     global collection
     data = collection.find_one({"phone_number": phoneNumber})
-    print(data['phone_number'])
     # data is a dict
     if (data is not None):
         return data
@@ -51,12 +50,27 @@ def getUser(phoneNumber):
 def createUser(user):
     valid = validateUser(user)
     if valid == True:
-        _setUser(user)
+        return _setUser(user)
     else:
         return "User could not be created: " + valid
-    return
 
 # private method; expects a valid user object
 def _setUser(user):
     global collection
     return collection.insert_one(user)
+
+# fetch all users -> coordinates + phone numbers
+def getAllUsers():
+    global collection
+    data = list(collection.find(projection=
+    {
+        "_id": 0,
+        "phone_number": 1,
+        "location.latitude": 1,
+        "location.longitude": 1
+    }))
+    if (data is not None):
+        return data
+    else:
+        return "User not found."
+    return
