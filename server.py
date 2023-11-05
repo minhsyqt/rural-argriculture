@@ -15,7 +15,8 @@ HOST = "localhost"
 MONGODB_SERVER = 'mongodb://localhost:27017/'
 NUM_PORTS = 256
 
-gmapsclient = googlemaps.Client(key='Ask Minh for API key')
+#gmapsclient = googlemaps.Client(key='Ask Minh for API key')
+openCage_api_key = 'b0771141718d418891a88be91a30574a'
 
 # Global Variables
 mongoclient = MongoClient(MONGODB_SERVER)
@@ -28,9 +29,23 @@ def handle_signup(connection, payload):
 
     latitude  = payload["farm_location_lat"]
     longitude = payload["farm_location_long"]
+    api_key = openCage_api_key
+    url = f'https://api.opencagedata.com/geocode/v1/json?q={latitude}+{longitude}&key={api_key}'
 
-    address = gmapsclient.reverse_geocode((latitude, longitude))
-    print(address)
+    # Send a GET request to the API
+    response = requests.get(url)
+
+    # Parse the JSON response
+    data = response.json()
+
+    # Extract city and country information from the response
+    if 'results' in data and data['results']:
+        result = data['results'][0]
+        city = result.get('components', {}).get('city', 'N/A')
+        country = result.get('components', {}).get('country', 'N/A')
+        print(f'City: {city}, Country: {country}')
+    else:
+        print('Location information not found.')
 
     # Insert new entry into MongoDB
     collection_entry = {
