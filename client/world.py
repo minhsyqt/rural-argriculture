@@ -15,9 +15,12 @@ class World:
         for i in range(num_farmers):
             # pick a random geolocation
             geolocation = {"lat" : random.uniform(lat_start, lat_stop), "long" : random.uniform(long_start, long_stop)}
-            self.farmers.append(Farmer(i, geolocation))
+            phone_number = ''.join(random.choices('0123456789', k=9))
+            self.farmers.append(Farmer(phone_number, geolocation))
 
-    def next_day(self, num_signup):
+    def next_day(self, num_signup_per_day):
         sample_list = range(0, self.num_farmers)
-        for i in random.sample(sample_list, num_signup):
-            self.farmers[i].signup()
+        signup_num = 0
+        for i in random.sample(sample_list, num_signup_per_day):
+            self.farmers[i].signup(signup_num)
+            signup_num += 1
