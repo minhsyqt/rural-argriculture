@@ -10,14 +10,15 @@
 # Build
 Before building, please build dependencies by running `python[3] -m pip install -r requirements.txt`
 
-# Resources
-[Test Bench](https://www.cloudlab.us/show-project.php?project=RuralAgriculture)
+# Resources/Documentation
+- [Test Bench](https://www.cloudlab.us/show-project.php?project=RuralAgriculture)
+## Milestone #1
+- [Milestone #1 Report](https://docs.google.com/document/d/1wjhrvLpg4ZRF1eYcNlT4u3lYyz2DlXeMc4ajwJUy_14/)
+- [Milestone #1 Feedback](https://docs.google.com/document/d/1Zn1Y8vQKZL6aYxjR3r8TT7Ak-GBUqXFzhp59A0WW-64)
+## Milestone #2
+- [Milestone #2 Report](https://docs.google.com/document/d/1AskeTW3eZOXggBxbe1c9Rf78I3EDYl_MfDlBFyTotpQ)
 
 # Example Start Command
 terminal 1: `$ python3 ./server.py --host localhost --port 6789`
 
 terminal 2: `$ python3 ./client.py --host localhost --port 6789`
-
-# Documentation
-
-[Milestone Paper](https://docs.google.com/document/d/1e6AjzVHlKFUWOpkIXDwbG4AG0jbpyfaMrozU4yS6uXg/edit)
