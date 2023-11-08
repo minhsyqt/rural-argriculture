@@ -6,52 +6,37 @@ import threading
 import argparse
 import json
 import selectors
-import pymongo
-import googlemaps
-from pymongo import MongoClient
+import mongoAPI
+import geoAPI
+import requests
 
 # Important Global Configurations
 HOST = "localhost"
-MONGODB_SERVER = 'mongodb://localhost:27017/'
 NUM_PORTS = 256
-
-#gmapsclient = googlemaps.Client(key='Ask Minh for API key')
-openCage_api_key = 'b0771141718d418891a88be91a30574a'
-
-# Global Variables
-mongoclient = MongoClient(MONGODB_SERVER)
-DB = mongoclient['farmers_database']
-farmers_collection = DB['farmers_info']
 
 def handle_signup(connection, payload):
     # Send reply back to client
     connection.sendall(json.dumps("Signup sucessful!").encode("utf-8"))
-
     latitude  = payload["farm_location_lat"]
     longitude = payload["farm_location_long"]
-    api_key = openCage_api_key
-    url = f'https://api.opencagedata.com/geocode/v1/json?q={latitude}+{longitude}&key={api_key}'
 
-    # Send a GET request to the API
-    response = requests.get(url)
-
-    # Parse the JSON response
-    data = response.json()
-
-    # Extract city and country information from the response
-    if 'results' in data and data['results']:
-        result = data['results'][0]
-        city = result.get('components', {}).get('city', 'N/A')
-        country = result.get('components', {}).get('country', 'N/A')
-        print(f'City: {city}, Country: {country}')
-    else:
-        print('Location information not found.')
+    #Get more information from lat/long with OpenCage
+    city, county, state, country = geoAPI.get_city_country(latitude, longitude)
 
     # Insert new entry into MongoDB
-    collection_entry = {
+    new_user = {
         "phone_number": payload["phone_number"],
+        "location": {
+            "latitude": float(latitude),
+            "longitude": float(longitude),
+            "city": city,
+            "county": county,
+            "state": state,
+            "country": country
+        }
     }
-    farmers_collection.insert_one(collection_entry)
+    mongoAPI.createUser(new_user)
+
 
 def handle_login(connection, payload):
     pass
@@ -65,7 +50,7 @@ def client_handler(connection, address):
                 break  # Break the loop if no data is received
 
             # Acknowledge message received
-            print("{}:{} wrote: {}".format(address[0], address[1], payload))
+            # print("{}:{} wrote: {}".format(address[0], address[1], payload))
 
             if payload["request_type"] == "signup":
                 handle_signup(connection, payload)
@@ -87,7 +72,7 @@ def accept_connections(ServerSocket):
 if __name__ == '__main__':
 
     # Setup MongoDB
-
+    mongoAPI.connect("World", "Farners")
 
     # Setup sockets
     start = time.time()
@@ -114,4 +99,4 @@ if __name__ == '__main__':
         print("Caught keyboard interrupt, exiting")
     finally:
         sel.close()
-        mongoclient.close()
+        mongoAPI.disconnect()

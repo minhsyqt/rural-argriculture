@@ -6,10 +6,12 @@ import json
 def validateUser(dict):
     if dict['phone_number'] == None:
         return "Invalid Phone Number."
-    elif (dict['firstname'] == None) and (dict['lastname'] == None):
-        return "No name given"
+    # elif (dict['firstname'] == None) and (dict['lastname'] == None):
+    #     return "No name given"
     elif (dict['location']['longitude'] == None) or (dict['location']['latitude'] == None):
         return "invalid coordinates."
+    elif (dict['location']['country'] == None): #At least the country name should be available
+        return "invalid city/country names."
     else:
         return True
 
@@ -67,7 +69,11 @@ def getAllUsers():
         "_id": 0,
         "phone_number": 1,
         "location.latitude": 1,
-        "location.longitude": 1
+        "location.longitude": 1,
+        "location.city": 1,
+        "location.county": 1,
+        "location.state": 1,
+        "location.country": 1
     }))
     if (data is not None):
         return data
