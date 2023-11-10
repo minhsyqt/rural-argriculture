@@ -17,6 +17,7 @@ Before building, please build dependencies by running `python[3] -m pip install 
 - [Milestone #1 Feedback](https://docs.google.com/document/d/1Zn1Y8vQKZL6aYxjR3r8TT7Ak-GBUqXFzhp59A0WW-64)
 ## Milestone #2
 - [Milestone #2 Report](https://docs.google.com/document/d/1AskeTW3eZOXggBxbe1c9Rf78I3EDYl_MfDlBFyTotpQ)
+- [Milestone #2 Feedback](https://docs.google.com/document/d/1qatRfsuETGv1EzvSRAw9kt9VOA9RL5TETMGMgmqQmH4)
 
 # Example Start Command
 terminal 1: `$ python3 ./server.py --host localhost --port 6789`
