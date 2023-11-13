@@ -7,10 +7,11 @@ import jwt
 import random
 
 class Farmer:
-    def __init__(self, phone_number, farm_location):
+    def __init__(self, phone_number, farm_location, plant_image_folder):
         self.farmerID = phone_number
         self.farm_location = farm_location
         self.already_signup = False
+        self.plant_image_folder = plant_image_folder
 
         # Signup related
         self.phone_number = phone_number # keep it simple ... 
@@ -56,4 +57,7 @@ class Farmer:
     # 1) pass token to cloudlab for verification
     # 2) send request for updates like weather, alarm
     def login(self):
+        pass
+
+    def send_image(self):
         pass

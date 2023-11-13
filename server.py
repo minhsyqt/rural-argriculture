@@ -37,10 +37,6 @@ def handle_signup(connection, payload):
     }
     mongoAPI.createUser(new_user)
 
-
-def handle_login(connection, payload):
-    pass
-
 def client_handler(connection, address):
     while True:
         try:
