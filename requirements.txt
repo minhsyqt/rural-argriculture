@@ -1,6 +1,6 @@
 python-openid2
-grpcio
 pymongo
 googlemaps
 selectors
 requests
+rpyc
