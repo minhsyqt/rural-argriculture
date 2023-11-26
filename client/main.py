@@ -17,4 +17,4 @@ if __name__ == '__main__':
 	# Different experiment to be ran
 	
 	#world.register_farmers(500)
-	world.send_plant_images(500)
+	world.send_plant_images(10)

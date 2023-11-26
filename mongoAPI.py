@@ -75,6 +75,20 @@ def _setUser(user):
     global collection
     return collection.insert_one(user)
 
+def getNewImages():
+    global collection
+
+    # Find documents where the "done" field is "false" (as a string)
+    documents = list(collection.find({"done": "false"}))
+
+    # Update the "done" field to "true" for the retrieved documents
+    result = collection.update_many(
+        {"done": "false"},
+        {"$set": {"done": "true"}}
+    )
+
+    return list(documents)
+
 # fetch all users -> coordinates + phone numbers
 def getAllUsers():
     global collection
