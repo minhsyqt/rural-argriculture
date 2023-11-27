@@ -1,5 +1,8 @@
+<<<<<<< Updated upstream
 import mongoAPI
 #import weather
+=======
+>>>>>>> Stashed changes
 import time
 import rpyc
 
