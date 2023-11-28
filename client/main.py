@@ -14,6 +14,7 @@ if __name__ == '__main__':
 
 	world = World(num_farmers, seed, lat_start, lat_stop, long_start, long_stop)
 
-	for day in range(DAYS):
-		print("===============Day %d=============="%day)
-		world.next_day(num_signup_per_day)
+	# Different experiment to be ran
+	
+	#world.register_farmers(500)
+	world.send_plant_images(10)

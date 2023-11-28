@@ -4,3 +4,5 @@ pymongo
 googlemaps
 selectors
 requests
+pytorch
+torchvision

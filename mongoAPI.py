@@ -15,6 +15,13 @@ def validateUser(dict):
     else:
         return True
 
+def validateImageEntry(entry):
+    if entry['phone_number'] == None:
+        return "Invalid Phone Number."
+    elif (len((entry['image_data'])) != 224*224*3):
+        return "Wrong Image Dimensions"
+    else:
+        return True
 
 # globals 
 #? should these be in a config file, encrypted?
@@ -56,10 +63,31 @@ def createUser(user):
     else:
         return "User could not be created: " + valid
 
+def createImageEntry(entry):
+    valid = validateImageEntry(entry)
+    if valid == True:
+        return _setUser(entry)
+    else:
+        return "Image cannot be inserted " + valid
+
 # private method; expects a valid user object
 def _setUser(user):
     global collection
     return collection.insert_one(user)
+
+def getNewImages():
+    global collection
+
+    # Find documents where the "done" field is "false" (as a string)
+    documents = list(collection.find({"done": "false"}))
+
+    # Update the "done" field to "true" for the retrieved documents
+    result = collection.update_many(
+        {"done": "false"},
+        {"$set": {"done": "true"}}
+    )
+
+    return list(documents)
 
 # fetch all users -> coordinates + phone numbers
 def getAllUsers():
