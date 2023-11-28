@@ -14,6 +14,7 @@ import requests
 HOST = "localhost"
 NUM_PORTS = 2048
 
+
 def handle_signup(connection, payload):
     # Setup MongoDB
     mongoAPI.connect("World", "Farmers")
@@ -29,6 +30,7 @@ def handle_signup(connection, payload):
 
     #Get more information from lat/long with OpenCage (uncomment to use the service)
     #city, county, state, country = geoAPI.get_city_country(latitude, longitude)
+
 
     # Insert new entry into MongoDB
     new_user = {
@@ -54,6 +56,7 @@ def handle_send_image(connection, phone_number, image_data):
 
     # Insert new entry into MongoDB
     mongoAPI.createImageEntry(new_entry)
+
 
 def client_handler(connection, address):
     try:
@@ -124,6 +127,6 @@ if __name__ == '__main__':
         print("Caught keyboard interrupt, exiting")
     finally:
         sel.close()
+        mongoAPI.disconnect()
         for key, _ in sel.get_map().items():
             key.fileobj.close()
-        mongoAPI.disconnect()
