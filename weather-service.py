@@ -1,4 +1,3 @@
-import mongoAPI
 import json
 import requests
 import rpyc
@@ -11,6 +10,8 @@ Headers = {
     }
 API_KEY = "a661df6f200547508bb181510230111"
 URL = BaseURL + "?key=" + API_KEY
+
+#
 
 
 class Weather(rpyc.Service):
