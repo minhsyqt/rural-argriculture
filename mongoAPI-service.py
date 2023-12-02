@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 import rpyc
-import json
 
 # globals 
 #? should these be in a config file, encrypted?
@@ -23,6 +22,13 @@ def _validateUser(dict):
         return "invalid coordinates."
     elif (dict['location']['country'] == None): #At least the country name should be available
         return "invalid city/country names."
+    else:
+        return True
+def validateImageEntry(entry):
+    if entry['phone_number'] == None:
+        return "Invalid Phone Number."
+    elif (len((entry['image_data'])) != 224*224*3):
+        return "Wrong Image Dimensions"
     else:
         return True
 
@@ -85,6 +91,27 @@ class MongoAPI(rpyc.Service):
         else:
             return "User not found."
         return
+    
+    def createImageEntry(self, entry):
+        valid = validateImageEntry(entry)
+        if valid == True:
+            return self._setUser(entry)
+        else:
+            return "Image cannot be inserted " + valid
+    
+    def getNewImages(self):
+        global collection
+
+        # Find documents where the "done" field is "false" (as a string)
+        documents = list(collection.find({"done": "false"}))
+
+        # Update the "done" field to "true" for the retrieved documents
+        result = collection.update_many(
+            {"done": "false"},
+            {"$set": {"done": "true"}}
+        )
+
+        return list(documents)
 
 if __name__ == '__main__':
     from rpyc.utils.server import ThreadedServer

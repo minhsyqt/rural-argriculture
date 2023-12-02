@@ -11,9 +11,6 @@ Headers = {
 API_KEY = "a661df6f200547508bb181510230111"
 URL = BaseURL + "?key=" + API_KEY
 
-#
-
-
 class Weather(rpyc.Service):
     def on_connect(self, conn):
         print("Socket bound.")
