@@ -1,8 +1,7 @@
-python-openid2
-grpcio
 pymongo
 googlemaps
 selectors
 requests
-pytorch
+rpyc
+torch
 torchvision

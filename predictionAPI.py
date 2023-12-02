@@ -4,24 +4,25 @@ import sys
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-import torchvision
+#import torchvision
 from torchvision import transforms, datasets
 import time
 import numpy as np
+import rpyc
 
 sys.path.append('../')
 sys.path.append('./disease_model')
 
 
 from dataset import PlantDiseaseDataset
-import model
+#import model
 from model import tiny_cnn
-import mongoAPI
 
 if __name__ == '__main__':
     try:
-        mongoAPI.connect("World", "Plant_Images")
-        documents = mongoAPI.getNewImages()
+        mongoAPI_service = (rpyc.connect("localhost", 18862)).root
+        mongoAPI_service.open("World", "Farmers")
+        documents = mongoAPI_service.getNewImages()
 
         network = tiny_cnn()
 
@@ -51,4 +52,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print("Caught keyboard interrupt, exiting")
     finally:
-        mongoAPI.disconnect()
+        mongoAPI_service = None
