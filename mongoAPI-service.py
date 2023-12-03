@@ -59,7 +59,7 @@ class MongoAPI(rpyc.Service):
             print(phoneNumber + " failed to find.")
             return ("User not found.")
     
-        # private method; expects a valid user object
+    # private method; expects a valid user object
     def _setUser(self, user):
         global collection
         return collection.insert_one(user)
@@ -112,6 +112,12 @@ class MongoAPI(rpyc.Service):
         )
 
         return list(documents)
+    
+    def storeAlert(self, alert):
+        global collection
+        print(alert)
+        return collection.insert_one(alert)
+
 
 if __name__ == '__main__':
     from rpyc.utils.server import ThreadedServer
