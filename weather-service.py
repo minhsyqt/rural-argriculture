@@ -1,6 +1,8 @@
 import json
 import requests
 import rpyc
+import time
+import math
 
 # https://api.weather.gov/points/{latitude},{longitude}
 BaseURL = "http://api.weatherapi.com/v1/current.json"
@@ -21,7 +23,8 @@ class Weather(rpyc.Service):
 
     # weather calls
     def fetch_weather(self, user):
-        url = URL + "&q=" + str(user['location']['latitude']) + "," + str(user['location']['longitude']) + "&aqi=yes"
+        start = time.time()
+        url = URL + "&q=" + str(round(user['location']['latitude'],7)) + "," + str(round(user['location']['longitude'],7)) + "&aqi=yes"
         weather_response = requests.get(url, headers=Headers).text
         weather_json = json.loads(weather_response)
         # trim down the fat. 
@@ -37,12 +40,15 @@ class Weather(rpyc.Service):
             "airquality": weather_json['current']['air_quality']['us-epa-index'] 
             
         }
-        print(str(user['location']['latitude']) + "," + str(user['location']['longitude'])+ " was accessed.")
+        
+        end = time.time()
+        #?print(end-start)
+        print(str(user['location']['latitude']) + "," + str(user['location']['longitude'])+ " was accessed in " + str(round(end-start,3)) +"s.")
         return weather
 
     # call all users' locations in database; create alerts for conditions containing:
     # Blizzard, Freezing rain, Hail, Heavy Rain, Strong Wind, Thunderstorm
-    # also look for air quality - anything 151-200 is unhealthy; 200+ is severe
+    # also look for air quality - anything 4-6 is unhealthy; 7+ is severe
     cond_list = ["Freezing", "Hail", "Heavy", "Strong", "Thunderstorm"]
     def generate_alerts(self):
         # fetch list of all users
@@ -58,9 +64,11 @@ class Weather(rpyc.Service):
             if any(condition in weather['weather'] for condition in self.cond_list):
                 self.store_alert("WEATHER", weather['weather'], user['phone_number'])
                 counter+=1
-            if int(weather["airquality"]) > 199:
+            if int(weather["airquality"]) > 6:
                 self.store_alert("AIR QUALITY", weather["airquality"], user['phone_number'])
                 counter+=1
+            #?print(weather["airquality"])
+            #?print(weather['weather'])
         return counter
     
     # fetches alerts stored in mongo collection; pushes them to users
@@ -70,6 +78,7 @@ class Weather(rpyc.Service):
 
     # takes in an alert and stores it.
     def store_alert(self, type, weather, phonenumber):
+        start = time.time()
         mongoAPI_service = (rpyc.connect("localhost", 18862)).root
         mongoAPI_service.open("World", "Alerts")
         alert = {
@@ -77,8 +86,9 @@ class Weather(rpyc.Service):
             "value": weather,
             "phonenumber": phonenumber
         }
-        print(alert)
         mongoAPI_service.storeAlert(alert)
+        end = time.time()
+        print("Alert: "+ alert + ", stored in " + str(round(end-start, 3)) + "s.")
             
 
 if __name__ == '__main__':
